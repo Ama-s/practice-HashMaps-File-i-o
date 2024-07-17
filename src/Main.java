@@ -1,5 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +32,8 @@ public class Main {
 
             // Each client has name, email and phone. Separated with spaces.
             while (input.hasNextLine()) {
-                String line = input.nextLine();
-                Scanner lineScanner = new Scanner(line);
-                lineScanner.useDelimiter(" ");
+                Scanner lineScanner = new Scanner(input.nextLine());
+                lineScanner.useDelimiter(" "); //This means that the Scanner will treat spaces as the boundaries between tokens
 
                 // Create a Client object and add it to the clients list.
                 if (lineScanner.hasNext()) {
@@ -47,13 +45,14 @@ public class Main {
                 lineScanner.close();
             }
         } finally {
-            if (input != null) {
+            if (input != null) { // if the input is no longer null, i.e it has data in it... close it 
                 input.close();
             }
         }
 
         // Serializable
-        ObjectOutputStream saveContacts = null;
+        ObjectOutputStream saveContacts = null; // to save the clients object
+        // to read it's ObjectInput to write it's ObjectOutput
         try {
             // Save the contacts list object on a file named client_info_backup.txt
             saveContacts = new ObjectOutputStream(new FileOutputStream("client_info_backup.txt"));
@@ -79,6 +78,17 @@ public class Main {
             if (restoring != null) {
                 restoring.close();
             }
+        }
+    }
+
+    private static class ObjectOutputStream {
+        public ObjectOutputStream(FileOutputStream fileOutputStream) {
+        }
+
+        public void writeObject(List<Client> clients) {
+        }
+
+        public void close() {
         }
     }
 }
