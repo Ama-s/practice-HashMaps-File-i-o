@@ -1,11 +1,9 @@
 import java.io.*;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
+
         Map<Long, String> contacts = new HashMap<>();
 
         contacts.put(8140560540L, "Deborah");
@@ -15,80 +13,28 @@ public class Main {
         contacts.put(8033438491L, "Dad");
 
         contacts.forEach((number, name) -> System.out.println("Telephone number: " + number + " Contact name: " + name));
-        BoundedClass<Integer> boundedClass = new BoundedClass<>(123);
-        boundedClass.display();
 
-
-        Scanner input = null;
         List<Client> clients = new ArrayList<>();
-
-        // Token per Token
-        try {
-            //
-            // Read file clients_info.txt, in every line there is a client information.
-            FileReader fileReader = new FileReader("clients_info.txt");
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            input = new Scanner(bufferedReader);
-
-            // Each client has name, email and phone. Separated with spaces.
-            while (input.hasNextLine()) {
-                Scanner lineScanner = new Scanner(input.nextLine());
-                lineScanner.useDelimiter(" "); //This means that the Scanner will treat spaces as the boundaries between tokens
-
-                // Create a Client object and add it to the clients list.
-                if (lineScanner.hasNext()) {
-                    String name = lineScanner.next();
-                    String email = lineScanner.next();
-                    String phone = lineScanner.next();
-                    clients.add(new Client(name, email, phone));
-                }
-                lineScanner.close();
-            }
-        } finally {
-            if (input != null) { // if the input is no longer null, i.e it has data in it... close it 
-                input.close();
-            }
-        }
+        clients.add(new Client("Charlie", "charlie@emailserver.com", "57575757"));
+        clients.add(new Client("Heidy", "heidy@emailserver.com", "78934510"));
+        clients.add(new Client("James", "james@emailserver.com", "46374637"));
+        clients.add(new Client("Gill", "gill@emailserver.com", "02934356"));
 
         // Serializable
-        ObjectOutputStream saveContacts = null; // to save the clients object
-        // to read it's ObjectInput to write it's ObjectOutput
-        try {
-            // Save the contacts list object on a file named client_info_backup.txt
-            saveContacts = new ObjectOutputStream(new FileOutputStream("client_info_backup.txt"));
+        try (ObjectOutputStream saveContacts = new ObjectOutputStream(new FileOutputStream("client_info_backup.txt"))) {
             saveContacts.writeObject(clients);
-        } finally {
-            if (saveContacts != null) {
-                saveContacts.close();
-            }
         }
 
         // Deserialize
-        ObjectInputStream restoring = null;
-        try {
-            // Restore the Contact List.
-            restoring = new ObjectInputStream(new FileInputStream("client_info_backup.txt"));
+        try (ObjectInputStream restoring = new ObjectInputStream(new FileInputStream("client_info_backup.txt"))) {
             List<Client> restoredClients = (List<Client>) restoring.readObject();
 
             // Print all the contacts.
             for (Client client : restoredClients) {
                 System.out.println(client);
             }
-        } finally {
-            if (restoring != null) {
-                restoring.close();
-            }
-        }
-    }
-
-    private static class ObjectOutputStream {
-        public ObjectOutputStream(FileOutputStream fileOutputStream) {
-        }
-
-        public void writeObject(List<Client> clients) {
-        }
-
-        public void close() {
+        } catch (EOFException e) {
+            System.out.println("Reached end of file unexpectedly: " + e.getMessage());
         }
     }
 }
