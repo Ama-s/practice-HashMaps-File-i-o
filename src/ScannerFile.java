@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class ScannerFile {
     public static void main(String[] args) throws Exception {
         Scanner input = null;
