@@ -1,51 +1,61 @@
-import java.io.IOException;
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.util.Scanner;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
-//Search for Tokens, delimited
 public class ScannerFile {
     public static void main(String[] args) throws Exception {
         Scanner input = null;
-        //Create a List of Clients. Create all needed classes.
+        List<Client> clients = new ArrayList<>();
 
-        //Token per Token
+        // Token per Token
         try {
-            //Read file clients_info.txt, in every line there is a client information.
-            input = new Scanner("clients_info.txt");
-            //Each client has name, email and phone. Separated with spaces.
+            // Read file clients_info.txt, in every line there is a client information.
+            FileReader fileReader = new FileReader("clients_info.txt");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            input = new Scanner(bufferedReader);
 
-            //Create a Client object and add it to the clients list.
+            // Each client has name, email and phone. Separated with spaces.
+            while (input.hasNextLine()) {
+                String line = input.nextLine();
+                Scanner lineScanner = new Scanner(line);
+                lineScanner.useDelimiter(" ");
+
+                // Create a Client object and add it to the clients list.
+                if (lineScanner.hasNext()) {
+                    String name = lineScanner.next();
+                    String email = lineScanner.next();
+                    String phone = lineScanner.next();
+                    clients.add(new Client(name, email, phone));
+                }
+                lineScanner.close();
+            }
         } finally {
-            if (input != null){
+            if (input != null) {
                 input.close();
             }
         }
 
-        //Serializable 
-        ObjectOutputStream savecontants = null;
+        // Serializable
+        ObjectOutputStream saveContacts = null;
         try {
-            //Save the contacts list object on a file named client_info_backup.txt
+            // Save the contacts list object on a file named client_info_backup.txt
+            saveContacts = new ObjectOutputStream(new FileOutputStream("client_info_backup.txt"));
+            saveContacts.writeObject(clients);
         } finally {
-            if (savecontants != null){
-                savecontants.close();
+            if (saveContacts != null) {
+                saveContacts.close();
             }
         }
 
-
-
-        //Deserialize
-
+        // Deserialize
         ObjectInputStream restoring = null;
         try {
-            //Restore the Contact List.
-            //Print all the contacts.
+            // Restore the Contact List.
+            restoring = new ObjectInputStream(new FileInputStream("client_info_backup.txt"));
+            List<Client> restoredClients = (List<Client>) restoring.readObject();
+
+            // Print all the contacts.
+            for (Client client : restoredClients) {
+                System.out.println(client);
+            }
         } finally {
-            if (restoring != null){
+            if (restoring != null) {
                 restoring.close();
             }
         }
