@@ -5,6 +5,7 @@ public class ScannerFile {
 
         // Token per Token
         try {
+            //
             // Read file clients_info.txt, in every line there is a client information.
             FileReader fileReader = new FileReader("clients_info.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
