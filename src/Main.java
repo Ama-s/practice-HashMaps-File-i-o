@@ -10,10 +10,11 @@ public class Main {
         contacts.put(8060519492L, "Mom");
         contacts.put(7038178613L, "Roseline");
         contacts.put(8168230633L, "Gift");
-        contacts.put(8033438491L, "Dad");
+        contacts.put(504343493L, "Fred");
 
         contacts.forEach((number, name) -> System.out.println("Telephone number: " + number + " Contact name: " + name));
 
+        //one method
         List<Client> clients = new ArrayList<>();
         clients.add(new Client("Charlie", "charlie@emailserver.com", "57575757"));
         clients.add(new Client("Heidy", "heidy@emailserver.com", "78934510"));
