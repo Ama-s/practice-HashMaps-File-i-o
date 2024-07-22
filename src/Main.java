@@ -36,6 +36,7 @@ public class Main {
             }
         } catch (EOFException e) {
             System.out.println("Reached end of file unexpectedly: " + e.getMessage());
+            //exit
         }
     }
 }
